@@ -24,6 +24,8 @@ unsigned long currentTime = 0;
 
 #define potABr 10
 
+#define AOrB 14
+
 struct Data_Package {
   byte j1X;
   byte j1Y;
@@ -77,7 +79,30 @@ void loop() {
     resetData();
   }
 
-  
+  if (radio.available() > 0){
+    radio.read(&data, sizeof(Data_Package));
+    lastReceiveTime = millis();
+    }
+
+  analogWrite(j1Xr,data.j1X);
+  analogWrite(j2Xr,data.j2X);
+  analogWrite(j1Yr,data.j1Y);
+  analogWrite(j2Yr,data.j2Y);
+
+  if (digitalRead(AOrB) == LOW){
+    analogWrite(potABr,data.potA);
+  }else{
+    analogWrite(potABr,data.potB);
+  }
+
+  digitalWrite(j1Br,data.j1B);  
+  digitalWrite(j2Br,data.j2B);
+
+  digitalWrite(toggleSwitchAr,data.toggleSwitchA);
+  digitalWrite(toggleSwitchBr,data.toggleSwitchB);
+
+  digitalWrite(pushButtonAr,data.pushButtonA);
+  digitalWrite(pushButtonBr,data.pushButtonB);  
 
 }
 
